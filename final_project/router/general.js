@@ -39,9 +39,10 @@ public_users.get('/isbn/:isbn',function (req, res) {
 public_users.get('/author/:author',function (req, res) {
   //Write your code here
   const author = req.params.author;
-  let book = Object.values(books).filter(b => b.author === author);
+  // convert author into lowercase
+  let book = Object.values(books).filter(b => b.author.toLowerCase() === author.toLowerCase());
   if (book.length > 0) {
-    book = book[0];
+    // book = book[0];
     return res.status(200).json(book);
   }
   return res.status(404).json({message: "Book with Author: "+ author +" Not Found!"});
@@ -51,7 +52,7 @@ public_users.get('/author/:author',function (req, res) {
 public_users.get('/title/:title',function (req, res) {
   //Write your code here
   const title = req.params.title;
-  let book = Object.values(books).filter(b => b.title === title);
+  let book = Object.values(books).filter(b => b.title.toLowerCase() === title.toLowerCase());
   if (book.length > 0) {
     book = book[0];
     return res.status(200).json(book);
