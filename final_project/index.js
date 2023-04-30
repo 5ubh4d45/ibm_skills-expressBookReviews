@@ -15,7 +15,7 @@ app.use("/customer/auth/*", function auth(req,res,next){
     // write auth logic with express-session from the request object
     if(req.session.authorization){
         let token = req.session.authorization.accessToken;
-        jwt.verify(token, SECREC_KEY, {expiresIn: 60 * 60}, (err, decoded)=>{
+        jwt.verify(token, SECREC_KEY, (err, decoded)=>{
             if (!err){
                 req.session.authorization = decoded;
                 next();
