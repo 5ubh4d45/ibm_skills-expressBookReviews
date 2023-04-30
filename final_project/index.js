@@ -3,28 +3,49 @@ const jwt = require('jsonwebtoken');
 const session = require('express-session')
 const customer_routes = require('./router/auth_users.js').authenticated;
 const genl_routes = require('./router/general.js').general;
-const SECREC_KEY = require('./router/auth_users.js').SECREC_KEY;
+const SECRET_KEY = require('./router/auth_users.js').SECRET_KEY;
 
 const app = express();
 
 app.use(express.json());
+
+app.use(function methodLogger(req, res, next) {
+    const method = req.method;
+    const ip = req.ip;
+    const path = req.path;
+    const now = new Date();
+    const dateTimeString = `${now.getFullYear()}-${now.getMonth()+1}-${now.getDate()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`;
+
+    console.log("");
+    console.log(`METHOD: ${method} in ${dateTimeString} at ${path} from ${ip}`);
+    
+    next();
+})
 
 app.use("/customer",session({secret:"fingerprint_customer",resave: true, saveUninitialized: true}))
 
 app.use("/customer/auth/*", function auth(req,res,next){
     // write auth logic with express-session from the request object
     if(req.session.authorization){
+        const username = req.session.authorization.username;
+        console.log(`AUTHORIZING: User: ${username}`);
+    //   console.log(JSON.stringify(req.session.authorization));
+        
         let token = req.session.authorization.accessToken;
-        jwt.verify(token, SECREC_KEY, (err, decoded)=>{
+        // console.log(token);
+        jwt.verify(token, SECRET_KEY, (err, decoded)=>{
             if (!err){
-                req.session.authorization = decoded;
+                // req.user = decoded;
+                console.log("AUTHORIZING SUCCESSFUL");
                 next();
             }else{
-                res.status(401).send("Unauthorized");
+                console.log("Error: " + err);
+                res.status(401).send("Unauthorized: You are not Authenticated");
             }
         });
     } else{
-        res.status(401).send("Unauthorized");
+        console.log("AUTHORIZING UNSUCCESSFUL: user not logged in");
+        res.status(401).send("Unauthorized: You are not logged in!");
     }
 });
  

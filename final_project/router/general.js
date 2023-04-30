@@ -8,14 +8,20 @@ const public_users = express.Router();
 public_users.post("/register", (req,res) => {
   //Write your code here
   const {username, password} = req.body;
+  console.log(`REGISTERING: User: ${username}`);
+
   if (username && password) {
     if (!isValid(username)) {
-      return res.status(400).json({message: "Username already exists"});
+        console.log("REGISTER UNSUCESSFUL: user alredy exists");
+        return res.status(400).json({message: "Username already exists"});
     }
     users.push({username, password});
+    
+    console.log("REGISTER SUCESSFUL");
     return res.status(200).json({message: "User registered successfully"});
-  }
-  // bad request
+}
+// bad request
+    console.log("REGISTER UNSUCESSFUL: username or password missing");
   return res.status(400).json({message: "Username or Password is missing"});
 });
 

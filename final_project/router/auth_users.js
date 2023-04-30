@@ -4,7 +4,7 @@ let books = require("./booksdb.js");
 const regd_users = express.Router();
 
 let users = [];
-const SECREC_KEY = "Secrect_Access_Key";
+const SECRET_KEY = "SecrectAccessKey";
 
 const isValid = (username)=>{ //returns boolean
 //write code to check is the username is valid
@@ -31,13 +31,25 @@ regd_users.post("/login", (req,res) => {
   //Write your code here
   const {username, password} = req.body;
   if (username && password) {
+      console.log(`AUTHENTICATING: User: ${username}`);
     if (authenticatedUser(username, password)) {
-      let accessToken = jwt.sign({data: username}, SECREC_KEY, {expiresIn: 60 * 60});
+        // console.log(username + " " + password);
+      
+        let accessToken = jwt.sign({data: password}, SECRET_KEY, {expiresIn: 60 * 60});
+
+    //   console.log(accessToken);
+      
       req.session.authorization = {username, accessToken};
-      return res.status(200).json({message: "Login successful"});
+
+    //   console.log(JSON.stringify(req.session.authorization));
+        console.log("LOGIN SUCESSFUL");
+        
+        return res.status(200).json({message: "Login successful"});
     }
+    console.log("LOGIN UNSUCESSFUL: unauthenticated");
     return res.status(401).json({message: "Unauthorized Access"});
-  }  
+}  
+    console.log("LOGIN UNSUCESSFUL: username or password missing");
   return res.status(400).json({message: "Username or Password is missing"});
 });
 
@@ -81,4 +93,4 @@ regd_users.delete("/auth/review/:isbn", (req, res) => {
 module.exports.authenticated = regd_users;
 module.exports.isValid = isValid;
 module.exports.users = users;
-module.exports.SECREC_KEY = SECREC_KEY;
+module.exports.SECRET_KEY = SECRET_KEY;
