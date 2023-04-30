@@ -32,6 +32,7 @@ The API should also be able to perform authentication and authorization. It is d
 ## **Protected Endpoints**
 ***PROTECTED_BASE_URL***: **"/customer/auth/*"**
 
-- **"/review/:isbn"** - PUT - Add or Edit review for a book by ISBN by the current logged in customer/user
-
+- **"/review/:isbn?review={review text}"** - PUT - Add or Edit review for a book by ISBN by the current logged in customer/user. The review data shoud be sent through the query parameters as follows:
+    - review
+    
 - **"/review/:isbn"** - DELETE - Delete review for a book by ISBN by the current logged in customer/user
