@@ -10,9 +10,9 @@ const isValid = (username)=>{ //returns boolean
 //write code to check is the username is valid
  let filtered = users.filter((user)=>user.username === username);
   if(filtered.length > 0){
-    return true;
-  }else{
     return false;
+  }else{
+    return true;
   }
 }
 
@@ -29,6 +29,7 @@ const authenticatedUser = (username,password)=>{ //returns boolean
 //only registered users can login
 regd_users.post("/login", (req,res) => {
   //Write your code here
+  
 
   return res.status(300).json({message: "Yet to be implemented"});
 });
