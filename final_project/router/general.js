@@ -3,7 +3,9 @@ let books = require("./booksdb.js");
 let isValid = require("./auth_users.js").isValid;
 let users = require("./auth_users.js").users;
 const public_users = express.Router();
+const axios = require('axios');
 
+const BOOK_SERVICE_URL="https://subhadas6836-5000.theiadocker-2-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai";
 
 public_users.post("/register", (req,res) => {
   //Write your code here
@@ -31,6 +33,16 @@ public_users.get('/',function (req, res) {
   return res.status(200).json(books);
 });
 
+// axios get request to book service "/" endpoint
+const getAllBooks = async () => {
+  try {
+    const response = await axios.get(`${BOOK_SERVICE_URL}/`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 // Get book details based on ISBN
 public_users.get('/isbn/:isbn',function (req, res) {
   //Write your code here
@@ -41,6 +53,17 @@ public_users.get('/isbn/:isbn',function (req, res) {
   }
   return res.status(404).json({message: "Book with ISBN: "+ isbn +" Not Found!"});
  });
+
+// Get book details by ISBN
+const getBookByISBN = async (isbn) => {
+  try {
+    const response = await axios.get(`${BOOK_SERVICE_URL}/isbn/${isbn}`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
   
 // Get book details based on author
 public_users.get('/author/:author',function (req, res) {
@@ -55,6 +78,17 @@ public_users.get('/author/:author',function (req, res) {
   return res.status(404).json({message: "Book with Author: "+ author +" Not Found!"});
 });
 
+// Get book details by author
+const getBookByAuthor = async (author) => {
+  try {
+    const response = await axios.get(`${BOOK_SERVICE_URL}/author/${author}`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+
 // Get all books based on title
 public_users.get('/title/:title',function (req, res) {
   //Write your code here
@@ -66,6 +100,17 @@ public_users.get('/title/:title',function (req, res) {
   }
   return res.status(404).json({message: "Book with Title: "+ title +" Not Found!"});
 });
+
+// Get book details by title
+const getBookByTitle = async (title) => {
+  try {
+    const response = await axios.get(`${BOOK_SERVICE_URL}/title/${title}`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 
 //  Get book review
 public_users.get('/review/:isbn',function (req, res) {
